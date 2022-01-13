@@ -69,6 +69,7 @@ def start_game():
             try_num += 1
         else:
             continue
+    print(f"Hard Luck! You were trying to guess the word {ground_truth}")
 
 
 if __name__ == '__main__':
