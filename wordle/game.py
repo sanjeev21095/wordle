@@ -45,11 +45,7 @@ class Wordle:
     def check_end_game(self):
         if all(value == "green" for value in self._tags.values()):
             print("Good Job!\n")
-            play_again = input("Play again? : (y/n)")
-            if play_again == "y":
-                start_game()
-            else:
-                exit()
+            play_again()
 
     @staticmethod
     def pick_game_word() -> str:
@@ -59,11 +55,19 @@ class Wordle:
         return contents[word_index]
 
 
+def play_again():
+    play = input("Play again? : (y/n)")
+    if play == "y":
+        start_game()
+    else:
+        exit()
+
+
 def start_game():
     print("You have 6 guesses!\n")
     ground_truth = Wordle.pick_game_word()
     try_num = 0
-    while try_num <= 6:
+    while try_num < 6:
         input_word = input(f"Guess {try_num + 1}: ")
         wordle_object = Wordle(input_word, ground_truth)
         if wordle_object.check_word_exists():
@@ -74,6 +78,7 @@ def start_game():
         else:
             continue
     print(f"Hard Luck! You were trying to guess the word {ground_truth}")
+    play_again()
 
 
 if __name__ == '__main__':
