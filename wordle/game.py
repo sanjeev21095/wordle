@@ -6,6 +6,8 @@ import random
 
 from wordle import rules
 
+file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "common_words.txt")
+
 
 class Wordle:
     def __init__(self, input_word, true_word):
@@ -14,10 +16,14 @@ class Wordle:
         self._tags = rules.create_tags(self._input_word)
 
     def check_word_exists(self):
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "common_words.txt")) as file:
+        if len(self._input_word) != 5:
+            print("Enter a 5 letter word only")
+            return False
+
+        with open(file_path) as file:
             contents = file.read().split("\n")
             if self._input_word not in contents:
-                print('Input word not found. Try again')
+                print('Input word not found. Try again!\n')
                 return False
             return True
 
@@ -36,15 +42,20 @@ class Wordle:
             output += colored(char, self._tags[pos])
         return output
 
+    def check_end_game(self):
+        if all(value == "green" for value in self._tags.values()):
+            print("Good Job!")
+            exit()
+
     @staticmethod
     def pick_game_word() -> str:
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "common_words.txt")) as file:
+        with open(file_path) as file:
             contents = file.read().split("\n")
         word_index = random.randint(0, len(contents))
         return contents[word_index]
 
 
-if __name__ == '__main__':
+def start_game():
     print("You have 6 guesses!\n")
     ground_truth = Wordle.pick_game_word()
     try_num = 0
@@ -53,5 +64,12 @@ if __name__ == '__main__':
         wordle_object = Wordle(input_word, ground_truth)
         if wordle_object.check_word_exists():
             wordle_object.process_word()
-        cprint("Attempt " + str(try_num+1) + " : " + wordle_object.get_answer())
+            cprint("Attempt " + str(try_num + 1) + " : " + wordle_object.get_answer() + "\n")
+            wordle_object.check_end_game()
+            try_num += 1
+        else:
+            continue
 
+
+if __name__ == '__main__':
+    start_game()
