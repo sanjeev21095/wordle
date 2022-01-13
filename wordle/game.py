@@ -44,8 +44,12 @@ class Wordle:
 
     def check_end_game(self):
         if all(value == "green" for value in self._tags.values()):
-            print("Good Job!")
-            exit()
+            print("Good Job!\n")
+            play_again = input("Play again? : (y/n)")
+            if play_again == "y":
+                start_game()
+            else:
+                exit()
 
     @staticmethod
     def pick_game_word() -> str:
